@@ -1,5 +1,7 @@
 package com.ione.controller;
-import com.ione.entity.Vehicle;
+
+import com.ione.dto.VehicleRequestDTO;
+import com.ione.dto.VehicleResponseDTO;
 import com.ione.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,22 +18,24 @@ public class VehicleController {
     private final VehicleService vehicleService;
 
     @PostMapping
-    public ResponseEntity<Vehicle> registerVehicle(@Valid @RequestBody Vehicle vehicle, @RequestParam Integer driverId) {
-        return ResponseEntity.ok(vehicleService.createVehicle(vehicle, driverId));
+    public ResponseEntity<VehicleResponseDTO> createVehicle(@Valid @RequestBody VehicleRequestDTO dto) {
+        VehicleResponseDTO created = vehicleService.createVehicle(dto);
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vehicle> getVehicle(@PathVariable Integer id) {
-        return ResponseEntity.ok(vehicleService.getVehicleById(id));
+    public ResponseEntity<VehicleResponseDTO> getVehicleById(@PathVariable Integer id) {
+        VehicleResponseDTO vehicle = vehicleService.getVehicleById(id);
+        return ResponseEntity.ok(vehicle);
     }
 
     @GetMapping
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+    public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
         return ResponseEntity.ok(vehicleService.getAllVehicles());
     }
 
     @GetMapping("/free")
-    public ResponseEntity<List<Vehicle>> getFreeVehicles() {
+    public ResponseEntity<List<VehicleResponseDTO>> getFreeVehicles() {
         return ResponseEntity.ok(vehicleService.getFreeVehicles());
     }
 
@@ -41,4 +45,3 @@ public class VehicleController {
         return ResponseEntity.noContent().build();
     }
 }
-

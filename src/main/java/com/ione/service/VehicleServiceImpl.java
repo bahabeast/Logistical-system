@@ -1,14 +1,20 @@
 package com.ione.service;
+
+import com.ione.dto.VehicleRequestDTO;
+import com.ione.dto.VehicleResponseDTO;
 import com.ione.entity.Driver;
 import com.ione.entity.Vehicle;
+import com.ione.entity.enums.Role;
+import com.ione.mapper.VehicleMapper;
 import com.ione.repository.DriverRepository;
 import com.ione.repository.VehicleRepository;
-import com.ione.service.VehicleService;
+import com.ione.security.AuthUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,35 +22,60 @@ public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final DriverRepository driverRepository;
+    private final VehicleMapper vehicleMapper;
 
     @Override
     @Transactional
-    public Vehicle createVehicle(Vehicle vehicle, Integer driverId) {
-        Driver driver = driverRepository.findById(driverId)
+    public VehicleResponseDTO createVehicle(VehicleRequestDTO dto) {
+        Driver driver = driverRepository.findById(dto.getDriverId())
                 .orElseThrow(() -> new RuntimeException("Driver not found"));
-        vehicle.setOwner(driver);
-        return vehicleRepository.save(vehicle);
+        Vehicle vehicle = VehicleMapper.toEntity(dto, driver);
+        Vehicle saved = vehicleRepository.save(vehicle);
+        return VehicleMapper.toDTO(saved);
     }
 
     @Override
-    public Vehicle getVehicleById(Integer id) {
-        return vehicleRepository.findById(id)
+    public VehicleResponseDTO getVehicleById(Integer id) {
+        Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+        return VehicleMapper.toDTO(vehicle);
     }
 
     @Override
-    public List<Vehicle> getAllVehicles() {
-        return vehicleRepository.findAll();
+    public List<VehicleResponseDTO> getAllVehicles() {
+        Role role = AuthUtil.getCurrentUserRole();
+
+        if (role == Role.CUSTOMER) {
+            // Customers only see FREE vehicles
+            return vehicleRepository.findAllByIsFreeTrue()
+                    .stream()
+                    .map(VehicleMapper::toDTO)
+                    .collect(Collectors.toList());
+        }
+
+        return vehicleRepository.findAll()
+                .stream()
+                .map(VehicleMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
+
     @Override
-    public List<Vehicle> getFreeVehicles() {
-        return vehicleRepository.findAllByIsFreeTrue();
+    public List<VehicleResponseDTO> getFreeVehicles() {
+        return vehicleRepository.findAllByIsFreeTrue()
+                .stream()
+                .map(VehicleMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public void deleteVehicle(Integer id) {
         vehicleRepository.deleteById(id);
+    }
+
+    @Override
+    public Vehicle save(Vehicle vehicle) {
+        return vehicleRepository.save(vehicle);
     }
 }
