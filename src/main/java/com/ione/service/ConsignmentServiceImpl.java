@@ -1,5 +1,7 @@
 package com.ione.service;
 
+import com.ione.dto.ConsignmentRequestDTO;
+import com.ione.dto.ConsignmentResponseDTO;
 import com.ione.entity.Consignment;
 import com.ione.entity.Customer;
 import com.ione.entity.Driver;
@@ -11,6 +13,8 @@ import com.ione.repository.OrderRepository;
 import com.ione.service.ConsignmentService;
 import com.ione.util.PdfGenerator;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,21 +34,24 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     @Transactional
-    public Consignment createConsignment(Long orderId) {
-        Order order = orderRepository.findById(orderId)
+    public Consignment createConsignment(ConsignmentRequestDTO dto) {
+        Order order = orderRepository.findById(dto.getOrderId())
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        if (order.getStatus() != com.ione.entity.enums.DeliveryStatus.SUCCEED) {
+        if (order.getDeliveryStatus() != com.ione.entity.enums.DeliveryStatus.SUCCEED) {
             throw new IllegalStateException("Consignment can only be created for SUCCEED orders.");
         }
+
+        ConsignmentResponseDTO responseDTO = new ConsignmentResponseDTO();
 
         Customer customer = customerRepository.findById(order.getCustomer().getId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         Driver driver = driverRepository.findById(order.getVehicle().getOwner().getId())
                 .orElseThrow(() -> new RuntimeException("Driver not found"));
-
-        BigDecimal totalCost = BigDecimal.valueOf(1000); // replace with actual calculation
+        @NotNull
+        @DecimalMin("0.0")
+        BigDecimal totalCost = dto.getTotalCost();
         BigDecimal platformFee = totalCost.multiply(BigDecimal.valueOf(0.1));
         BigDecimal driverPayment = totalCost.subtract(platformFee);
 
@@ -60,10 +67,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         consignment.setPlatformFee(platformFee);
         consignment.setDriverPayment(driverPayment);
         consignment.setIssuedAt(LocalDateTime.now());
-        consignment.setDeliveredAt(LocalDateTime.now());
 
         try {
-            String fileUrl = PdfGenerator.generateConsignmentPdf(consignment);
+            String fileUrl = PdfGenerator.generateConsignmentPdf(consignment, order);
             consignment.setFileUrl(fileUrl);
         } catch (IOException e) {
             throw new RuntimeException("Failed to generate PDF for consignment", e);
@@ -71,6 +77,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
         return consignmentRepository.save(consignment);
     }
+
 
     @Override
     public Consignment getById(Long id) {

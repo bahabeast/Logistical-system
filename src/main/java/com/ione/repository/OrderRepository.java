@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByCustomer(Customer customer);
-    List<Order> findByStatus(DeliveryStatus status);
+    List<Order> findByDeliveryStatus(DeliveryStatus deliveryStatus);
     List<Order> findByCustomerId(Integer customerId);
 
 }

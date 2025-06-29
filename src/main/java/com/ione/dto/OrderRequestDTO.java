@@ -1,5 +1,7 @@
 package com.ione.dto;
 
+import com.ione.entity.enums.DeliveryStatus;
+import com.ione.entity.enums.VehicleType;
 import lombok.Data;
 
 @Data
@@ -10,8 +12,8 @@ public class OrderRequestDTO {
     private float volumeCubicMeters;
     private String pickupLocation;
     private String deliveryLocation;
-    private Long vehicleId; // optional
-    private String recipientName;
+    private Long vehicleId;
+    private DeliveryStatus deliveryStatus;
     private String recipientPhone;
-    private String recipientAddress;
+    private VehicleType vehicleType;
 }

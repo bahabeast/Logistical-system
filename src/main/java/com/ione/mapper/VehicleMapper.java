@@ -10,9 +10,9 @@ public class VehicleMapper {
 
     public static Vehicle toEntity(VehicleRequestDTO dto, Driver driver) {
         Vehicle vehicle = new Vehicle();
-        vehicle.setLicensePlate(dto.getLicencePlate());
+        vehicle.setLicensePlate(dto.getLicensePlate());
         vehicle.setModel(dto.getModel());
-        vehicle.setType(dto.getVehicleType());
+        vehicle.setVehicleType(dto.getVehicleType());
         vehicle.setYearOfManufacture(dto.getYearOfManufacture());
         vehicle.setCapacityTons(dto.getCapacityTons());
         vehicle.setVolumeCubicMeters(dto.getVolumeCubicMeters());
@@ -30,7 +30,7 @@ public class VehicleMapper {
         dto.setId(vehicle.getId());
         dto.setLicensePlate(vehicle.getLicensePlate());
         dto.setModel(vehicle.getModel());
-        dto.setType(vehicle.getType());
+        dto.setVehicleType(vehicle.getVehicleType());
         dto.setYearOfManufacture(vehicle.getYearOfManufacture());
         dto.setCapacityTons(vehicle.getCapacityTons());
         dto.setVolumeCubicMeters(vehicle.getVolumeCubicMeters());
@@ -40,7 +40,7 @@ public class VehicleMapper {
         dto.setRegistrationCertificate(vehicle.getRegistrationCertificate());
         dto.setFullName(vehicle.getOwner().getFullName());
         dto.setCreatedAt(vehicle.getCreatedAt());
-        dto.setDriverId(vehicle.getOwner().getId());
+        dto.setOwnerId(vehicle.getOwner().getId());
         return dto;
     }
 

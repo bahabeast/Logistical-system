@@ -15,6 +15,6 @@ public class DriverRequestDTO {
     private LocalDate datOfBirth;
     private String licenseNumber;
     private LocalDateTime created_at;
-    private BigDecimal balance=BigDecimal.ZERO;
+    private BigDecimal balance;
     private String passwordHash;
 }

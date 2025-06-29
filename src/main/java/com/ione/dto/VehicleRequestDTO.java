@@ -1,5 +1,6 @@
 package com.ione.dto;
 
+import com.ione.entity.enums.Role;
 import com.ione.entity.enums.VehicleType;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class VehicleRequestDTO {
-    private String licencePlate;
+    private String licensePlate;
     private String model;
     private VehicleType vehicleType;
     private int yearOfManufacture;
@@ -18,6 +19,7 @@ public class VehicleRequestDTO {
     private Boolean isFree;
     private LocalDate insuranceValidUntil;
     private String registrationCertificate;
-    private Integer driverId;
+    private Integer ownerId;
     private LocalDateTime createdAt;
+
 }

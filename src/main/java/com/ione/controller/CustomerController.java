@@ -6,6 +6,7 @@ import com.ione.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -23,23 +24,22 @@ public class CustomerController {
         CustomerResponseDTO created = customerService.createCustomer(dto);
         return ResponseEntity.ok(created);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable Integer id) {
         CustomerResponseDTO customer = customerService.getCustomerById(id);
         return ResponseEntity.ok(customer);
     }
-
     @GetMapping
     public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
-
+    @PreAuthorize("hasRole('CUSTOMER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
     }
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping("/{id}/balance")
     public ResponseEntity<String> updateBalance(@PathVariable Integer id, @RequestParam BigDecimal amount) {
         customerService.updateBalance(id, amount);

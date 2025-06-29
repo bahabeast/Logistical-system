@@ -16,7 +16,6 @@ public class ConsignmentMapper {
         consignment.setPlatformFee(dto.getPlatformFee());
         consignment.setDriverPayment(dto.getDriverPayment());
         consignment.setFileUrl(dto.getFileUrl());
-        consignment.setDeliveredAt(dto.getDeliveredAt());
         return consignment;
     }
 
@@ -29,7 +28,6 @@ public class ConsignmentMapper {
         dto.setDriverPayment(consignment.getDriverPayment());
         dto.setFileUrl(consignment.getFileUrl());
         dto.setIssuedAt(consignment.getIssuedAt());
-        dto.setDeliveredAt(consignment.getDeliveredAt());
         return dto;
     }
 }

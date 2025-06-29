@@ -1,5 +1,6 @@
 package com.ione.dto;
 
+import com.ione.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,5 @@ public class CustomerDTO {
     private String email;
     private LocalDateTime createdAt;
     private String companyAddress;
+    private Role role;
 }

@@ -1,6 +1,7 @@
 package com.ione.dto;
 
 import com.ione.entity.enums.DeliveryStatus;
+import com.ione.entity.enums.VehicleType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,9 +16,8 @@ public class OrderResponseDTO {
     private String pickupLocation;
     private String deliveryLocation;
     private String vehicleRegistrationNumber;
-    private String recipientName;
     private String recipientPhone;
-    private String recipientAddress;
-    private DeliveryStatus status;
     private LocalDateTime createdAt;
+    private DeliveryStatus deliveryStatus;
+    private VehicleType vehicleType;
 }

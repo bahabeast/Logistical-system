@@ -6,6 +6,7 @@ import com.ione.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class VehicleController {
     public ResponseEntity<List<VehicleResponseDTO>> getFreeVehicles() {
         return ResponseEntity.ok(vehicleService.getFreeVehicles());
     }
-
+    @PreAuthorize("hasRole('DRIVER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Integer id) {
         vehicleService.deleteVehicle(id);

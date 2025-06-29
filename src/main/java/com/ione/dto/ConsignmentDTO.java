@@ -18,5 +18,4 @@ public class ConsignmentDTO {
     private BigDecimal driverPayment;
     private String fileUrl;
     private LocalDateTime issuedAt;
-    private LocalDateTime deliveredAt;
 }

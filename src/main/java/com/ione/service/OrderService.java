@@ -8,7 +8,7 @@ import com.ione.entity.enums.DeliveryStatus;
 import java.util.List;
 
 public interface OrderService {
-    Order updateStatus(Long orderId, DeliveryStatus status);
+    Order updateDeliveryStatus(Long orderId, DeliveryStatus deliveryStatus);
     Order markAsFailed(Long orderId);
     Order markAsSucceed(Long orderId); // creates Consignment
     List<Order> getCustomerOrders(Integer customerId);

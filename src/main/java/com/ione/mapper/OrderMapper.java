@@ -18,10 +18,10 @@ public class OrderMapper {
         order.setVolumeCubicMeters(dto.getVolumeCubicMeters());
         order.setPickupLocation(dto.getPickupLocation());
         order.setDeliveryLocation(dto.getDeliveryLocation());
-        order.setVehicle(vehicle); // can be null
-        order.setRecipientName(dto.getRecipientName());
+        order.setVehicle(vehicle);
         order.setRecipientPhone(dto.getRecipientPhone());
-        order.setRecipientAddress(dto.getRecipientAddress());
+        order.setVehicleType(dto.getVehicleType());
+        order.setDeliveryStatus(dto.getDeliveryStatus());
         return order;
     }
 
@@ -34,11 +34,10 @@ public class OrderMapper {
         dto.setVolumeCubicMeters(order.getVolumeCubicMeters());
         dto.setPickupLocation(order.getPickupLocation());
         dto.setDeliveryLocation(order.getDeliveryLocation());
-        dto.setRecipientName(order.getRecipientName());
         dto.setRecipientPhone(order.getRecipientPhone());
-        dto.setRecipientAddress(order.getRecipientAddress());
-        dto.setStatus(order.getStatus());
+        dto.setDeliveryStatus(order.getDeliveryStatus());
         dto.setCreatedAt(order.getCreatedAt());
+        dto.setVehicleType(order.getVehicle().getVehicleType());
         return dto;
     }
 }

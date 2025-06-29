@@ -27,8 +27,8 @@ public class Vehicle implements Serializable {
     private String model;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private VehicleType type;
+    @Column(name = "vehicle_type", nullable = false)
+    private VehicleType vehicleType;
 
     @Column(name = "year_of_manufacture", nullable = false)
     private int yearOfManufacture;

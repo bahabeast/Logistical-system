@@ -27,7 +27,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     @Transactional
     public VehicleResponseDTO createVehicle(VehicleRequestDTO dto) {
-        Driver driver = driverRepository.findById(dto.getDriverId())
+        Driver driver = driverRepository.findById(dto.getOwnerId())
                 .orElseThrow(() -> new RuntimeException("Driver not found"));
         Vehicle vehicle = VehicleMapper.toEntity(dto, driver);
         Vehicle saved = vehicleRepository.save(vehicle);
@@ -43,8 +43,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public List<VehicleResponseDTO> getAllVehicles() {
-        Role role = AuthUtil.getCurrentUserRole();
-
+        Role role = Role.valueOf(AuthUtil.getCurrentUserRole());
         if (role == Role.CUSTOMER) {
             // Customers only see FREE vehicles
             return vehicleRepository.findAllByIsFreeTrue()

@@ -39,9 +39,6 @@ public class Consignment implements Serializable {
     @Column(name = "issued_at", nullable = false)
     private LocalDateTime issuedAt;
 
-    @Column(name = "delivered_at", nullable = false)
-    private LocalDateTime deliveredAt;
-
     @PrePersist
     protected void onCreate() {
         issuedAt = LocalDateTime.now();

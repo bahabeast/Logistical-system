@@ -1,8 +1,18 @@
 package com.ione.entity.enums;
+
 public enum DeliveryStatus {
-    PENDING, GOING_TO_LOAD, LOADING, IN_TRANSIT, DELIVERED, UNLOADING, SUCCEED, FAILED;
+    PENDING,
+    GOING_TO_LOAD,
+    LOADING,
+    IN_TRANSIT,
+    DELIVERED,
+    UNLOADING,
+    SUCCEED,
+    FAILED;
 
     public boolean canTransitionTo(DeliveryStatus next, Role role) {
+        if (next == null || role == null) return false;
+
         return switch (role) {
             case CUSTOMER -> switch (this) {
                 case PENDING -> next == GOING_TO_LOAD;

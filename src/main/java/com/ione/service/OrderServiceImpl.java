@@ -1,7 +1,7 @@
 package com.ione.service;
+import com.ione.entity.Consignment;
+import com.ione.repository.ConsignmentRepository;
 import com.ione.security.AuthUtil;
-import com.ione.security.JwtUtil;
-import com.ione.entity.Driver;
 import com.ione.entity.enums.Role;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -12,11 +12,11 @@ import com.ione.entity.enums.DeliveryStatus;
 import com.ione.repository.CustomerRepository;
 import com.ione.repository.OrderRepository;
 import com.ione.repository.VehicleRepository;
-import com.ione.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,55 +28,39 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final VehicleRepository vehicleRepository;
-
     @Override
     @Transactional
-    public Order updateStatus(Long orderId, DeliveryStatus newStatus) {
+    public Order updateDeliveryStatus(Long orderId, DeliveryStatus newStatus) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         String username = AuthUtil.getCurrentUsername();
         Role role = Role.valueOf(AuthUtil.getCurrentUserRole());
-        DeliveryStatus currentStatus = order.getStatus();
+        DeliveryStatus currentStatus = order.getDeliveryStatus();
 
+        // Role-based access validation
         if (role == Role.CUSTOMER) {
             if (!order.getCustomer().getEmail().equals(username)) {
                 throw new AccessDeniedException("Not your order.");
             }
-
-            // Allowed transitions: PENDING → GOING_TO_LOAD
-            // DELIVERED → UNLOADING → SUCCEED/FAILED
-            boolean valid = switch (currentStatus) {
-                case PENDING -> newStatus == DeliveryStatus.GOING_TO_LOAD;
-                case DELIVERED -> newStatus == DeliveryStatus.UNLOADING;
-                case UNLOADING -> newStatus == DeliveryStatus.SUCCEED || newStatus == DeliveryStatus.FAILED;
-                default -> false;
-            };
-
-            if (!valid)
-                throw new IllegalStateException("Customer can't perform this status change.");
-        }
-
-        if (role == Role.DRIVER) {
+        } else if (role == Role.DRIVER) {
             if (order.getVehicle() == null ||
                     !order.getVehicle().getOwner().getEmail().equals(username)) {
                 throw new AccessDeniedException("Driver doesn't own this order.");
             }
-
-            // Allowed transitions: GOING_TO_LOAD → LOADING → IN_TRANSIT → DELIVERED
-            boolean valid = switch (currentStatus) {
-                case GOING_TO_LOAD -> newStatus == DeliveryStatus.LOADING;
-                case LOADING -> newStatus == DeliveryStatus.IN_TRANSIT;
-                case IN_TRANSIT -> newStatus == DeliveryStatus.DELIVERED;
-                default -> false;
-            };
-
-            if (!valid)
-                throw new IllegalStateException("Driver can't perform this status change.");
         }
 
-        order.setStatus(newStatus);
-        return orderRepository.save(order);
+        // Unified transition validation logic
+        if (!currentStatus.canTransitionTo(newStatus, role)) {
+            throw new IllegalStateException("Invalid status change: " + currentStatus + " → " + newStatus + " by " + role);
+        }
+        if (newStatus == DeliveryStatus.SUCCEED) {
+            order.setDeliveryStatus(newStatus);
+            order.getVehicle().setIsFree(true);
+        }
+            return orderRepository.save(order);
+
+
     }
 
 
@@ -86,8 +70,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        order.setStatus(DeliveryStatus.FAILED);
-        // No consignment will be created
+        order.setDeliveryStatus(DeliveryStatus.FAILED);
         return orderRepository.save(order);
     }
 
@@ -97,8 +80,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        order.setStatus(DeliveryStatus.SUCCEED);
-        // Logic for consignment should be triggered elsewhere after this
+        order.setDeliveryStatus(DeliveryStatus.SUCCEED);
         return orderRepository.save(order);
     }
 
@@ -138,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
 
         // only allow PENDING orders for customers/drivers
         if ((role == Role.CUSTOMER || role == Role.DRIVER) &&
-                order.getStatus() != DeliveryStatus.PENDING &&
+                order.getDeliveryStatus() != DeliveryStatus.PENDING &&
                 role == Role.CUSTOMER) {
             throw new AccessDeniedException("Customers can only access PENDING orders");
         }
@@ -160,12 +142,13 @@ public class OrderServiceImpl implements OrderService {
 
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
-
+        vehicle.setIsFree(false);
         order.setVehicle(vehicle);
+        order.setDeliveryStatus(DeliveryStatus.GOING_TO_LOAD);
         return orderRepository.save(order);
     }
     public Map<String, List<Order>> groupPendingOrdersByDestination() {
-        return orderRepository.findByStatus(DeliveryStatus.PENDING)
+        return orderRepository.findByDeliveryStatus(DeliveryStatus.PENDING)
                 .stream()
                 .collect(Collectors.groupingBy(Order::getDeliveryLocation));
     }
@@ -173,7 +156,7 @@ public class OrderServiceImpl implements OrderService {
     public Map<String, List<Vehicle>> groupFreeVehiclesByType() {
         return vehicleRepository.findAllByIsFreeTrue()
                 .stream()
-                .collect(Collectors.groupingBy(v -> v.getType().name()));
+                .collect(Collectors.groupingBy(v -> v.getVehicleType().name()));
     }
 
 }

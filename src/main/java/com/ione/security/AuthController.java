@@ -6,6 +6,7 @@ import com.ione.entity.Customer;
 import com.ione.entity.Driver;
 import com.ione.repository.CustomerRepository;
 import com.ione.repository.DriverRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
+    private final JwtService.TokenBlacklistService tokenBlacklistService;
     @PostMapping("/signup/customer")
     public ResponseEntity<?> registerCustomer(@RequestBody @Valid CustomerSignupRequestDTO request) {
         if (customerRepository.existsByEmail(request.getEmail())) {
@@ -56,6 +57,7 @@ public class AuthController {
         driver.setEmail(request.getEmail());
         driver.setPhoneNumber(request.getPhoneNumber());
         driver.setLicenseNumber(request.getLicenseNumber());
+        driver.setDateOfBirth(request.getDateOfBirth());
         driver.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
         driverRepository.save(driver);
@@ -82,4 +84,14 @@ public class AuthController {
 
         return ResponseEntity.ok(new AuthResponse(token));
     }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            tokenBlacklistService.blacklistToken(token);
+        }
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
 }

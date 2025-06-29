@@ -1,5 +1,6 @@
 package com.ione.dto;
 
+import com.ione.entity.enums.Role;
 import com.ione.entity.enums.VehicleType;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ public class VehicleResponseDTO {
     private Integer id;
     private String fullName;
     private String model;
-    private VehicleType type;
+    private VehicleType vehicleType;
     private int yearOfManufacture;
     private float capacityTons;
     private float volumeCubicMeters;
@@ -22,5 +23,6 @@ public class VehicleResponseDTO {
     private LocalDate insuranceValidUntil;
     private String registrationCertificate;
     private String licensePlate;
-    private Integer driverId;
+    private Integer ownerId;
+
 }

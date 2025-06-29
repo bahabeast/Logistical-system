@@ -1,5 +1,6 @@
 package com.ione.dto;
 
+import com.ione.entity.enums.Role;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,4 +15,5 @@ public class CustomerResponseDTO {
     private String phoneNumber;
     private String companyAddress;
     private LocalDateTime createdAt;
+    private Role role;
 }

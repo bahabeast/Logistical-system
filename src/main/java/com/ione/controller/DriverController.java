@@ -6,6 +6,7 @@ import com.ione.service.DriverService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -23,7 +24,7 @@ public class DriverController {
         DriverResponseDTO created = driverService.createDriver(dto);
         return ResponseEntity.ok(created);
     }
-
+    @PreAuthorize("hasRole('DRIVER')")
     @GetMapping("/{id}")
     public ResponseEntity<DriverResponseDTO> getDriverById(@PathVariable Integer id) {
         DriverResponseDTO driver = driverService.getDriverById(id);
@@ -40,6 +41,7 @@ public class DriverController {
         driverService.deleteDriver(id);
         return ResponseEntity.noContent().build();
     }
+    @PreAuthorize("hasRole('DRIVER')")
     @PostMapping("/{id}/balance")
     public ResponseEntity<String> updateBalance(@PathVariable Integer id, @RequestParam BigDecimal amount) {
         driverService.updateBalance(id, amount);

@@ -1,6 +1,7 @@
 package com.ione.entity;
 
 import com.ione.entity.enums.DeliveryStatus;
+import com.ione.entity.enums.VehicleType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,20 +40,16 @@ public class Order implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
-
-    @Column(name = "recipient_name", nullable = false)
-    private String recipientName;
+    private Vehicle vehicle=null;
 
     @Column(name = "recipient_phone", nullable = false)
     private String recipientPhone;
-
-    @Column(name = "recipient_address", nullable = false)
-    private String recipientAddress;
-
+    @Column(name="vehicle_type", nullable = false)
+    @Enumerated
+    private VehicleType vehicleType;
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private DeliveryStatus status = DeliveryStatus.PENDING;
+    @Column(name = "delivery_status", nullable = false)
+    private DeliveryStatus deliveryStatus = DeliveryStatus.PENDING;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

@@ -18,5 +18,5 @@ public class CustomerRequestDTO {
     private String phoneNumber;
     private String companyAddress;
     private String passwordHash;
-    private BigDecimal balance=BigDecimal.ZERO;
+    private BigDecimal balance;
 }
