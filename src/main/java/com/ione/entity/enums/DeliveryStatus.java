@@ -1,6 +1,6 @@
 package com.ione.entity.enums;
 
-public enum DeliveryStatus {
+public enum     DeliveryStatus {
     PENDING,
     GOING_TO_LOAD,
     LOADING,

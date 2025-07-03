@@ -38,8 +38,9 @@ public class OrderController {
     public Order assignVehicle(@Valid @PathVariable Long orderId, @PathVariable Integer vehicleId) {
         return orderService.assignVehicle(orderId, vehicleId);
     }
+    @PreAuthorize("hasRole('DRIVER')")
     @PatchMapping("/{orderId}/deliveryStatus")
-    public ResponseEntity<Order> updateStatus(
+    public ResponseEntity<Order> updateDeliveryStatus(
             @PathVariable Long orderId,
             @RequestParam("deliveryStatus") DeliveryStatus newStatus) {
 

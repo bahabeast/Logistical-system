@@ -38,7 +38,6 @@ public class OrderServiceImpl implements OrderService {
         Role role = Role.valueOf(AuthUtil.getCurrentUserRole());
         DeliveryStatus currentStatus = order.getDeliveryStatus();
 
-        // Role-based access validation
         if (role == Role.CUSTOMER) {
             if (!order.getCustomer().getEmail().equals(username)) {
                 throw new AccessDeniedException("Not your order.");
@@ -49,13 +48,11 @@ public class OrderServiceImpl implements OrderService {
                 throw new AccessDeniedException("Driver doesn't own this order.");
             }
         }
-
-        // Unified transition validation logic
+        order.setDeliveryStatus(newStatus);
         if (!currentStatus.canTransitionTo(newStatus, role)) {
             throw new IllegalStateException("Invalid status change: " + currentStatus + " → " + newStatus + " by " + role);
         }
         if (newStatus == DeliveryStatus.SUCCEED) {
-            order.setDeliveryStatus(newStatus);
             order.getVehicle().setIsFree(true);
         }
             return orderRepository.save(order);
