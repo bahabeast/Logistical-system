@@ -14,28 +14,29 @@ Compared to existing regional platforms like **fafa.kz**, **della.kz**, and **at
 
 ### fafa.kz, della.kz, ati.su – Limitations
 
-No User Interface (UI)
-The application currently lacks a web or mobile frontend. It is designed to expose REST APIs and requires integration with a client application to be used interactively.
+Limitations of Existing Platforms (fafa.kz, della.kz, ati.su)
+Popular platforms like fafa.kz, della.kz, and ati.su are widely used in Kazakhstan and CIS countries for cargo matching and logistics coordination. However, they are primarily built around marketplace-style listings, and have critical limitations when it comes to automating and managing end-to-end logistics workflows. Below are the key limitations of these platforms that your system addresses:
 
-No Real-Time Notifications
-Features such as email, SMS, or in-app notifications for order updates and delivery status changes are not yet implemented.
+1. Lack of End-to-End Workflow Automation
+   These platforms focus mainly on listing and searching for transport offers or cargo. They do not provide a structured backend workflow for managing an order from creation to final delivery, including role-specific transitions, document generation, or vehicle assignment.
 
-No Document Export (PDF/Excel)
-Although consignment generation is supported at the data level, export functionality (e.g., to PDF or Excel) has not yet been added.
+2. No True Role-Based Logic
+   All user roles (drivers, customers, dispatchers) typically operate in the same interface with limited separation. There is no enforcement of ownership at the API or business logic level, which increases the risk of data exposure and unauthorized actions.
 
-No Admin or Dispatcher Role
-Only customer and driver roles are implemented. Dispatcher or administrator functionalities (e.g., overseeing all orders, assigning drivers) are planned for future versions.
+3. No Delivery Lifecycle Tracking
+   They do not support controlled status transitions like PENDING → IN_TRANSIT → DELIVERED, nor do they validate the roles allowed to perform these changes. Drivers and customers cannot reliably track the status or progression of their deliveries through defined lifecycle states.
 
-No Payment or Billing Integration
-The system does not yet support financial operations such as invoicing, payment tracking, or cost estimation.
+4. No Automated Document Handling
+   These platforms do not offer backend support for generating official transport documents such as consignment notes based on real-time order data. Users must handle this manually or through external systems.
 
-Limited Error Reporting and Logging
-While basic exception handling exists, detailed operational logging, auditing, and centralized error tracking have not been integrated.
+5. Limited Integration Potential
+   Due to their monolithic and often closed architectures, integration with third-party systems (e.g., accounting, CRM, GPS tracking, or warehouse management) is difficult or unsupported. Your system, on the other hand, is modular and API-driven, enabling future integrations.
 
-Deployment and Scalability Features Not Included
-There is no out-of-the-box support for containerization (e.g., Docker), CI/CD pipelines, or horizontal scaling infrastructure.
+6. No Extensibility for Logistics Teams
+   Logistics companies cannot expand these platforms to include custom workflows, dashboards, role hierarchies, or analytics. Your backend is designed to be extendable, with separate modules for services, entities, DTOs, and role-based access control.
 
-
+7. Manual Operations Remain the Norm
+   Dispatching, consignment generation, delivery confirmation, and status updates must be done manually or via communication channels outside the system. This introduces inefficiencies and reduces accountability.
 
 ### This System – Advantages
 
@@ -98,10 +99,13 @@ There is no out-of-the-box support for containerization (e.g., Docker), CI/CD pi
 
 While the system provides strong backend infrastructure, it currently operates as a prototype. Some limitations include:
 
-- No web frontend or mobile client is yet integrated
-- No payment processing or invoicing logic is included
-- PDF document generation is planned but not implemented
-- Real-time notifications (e.g., via SMS or email) are not active
+- These platforms often serve as **listing services** where cargo or vehicle availability is posted, but **do not support full back-office automation**.
+- There is **no granular role-based access**, which leads to poor separation between user types.
+- Features like **real-time delivery status updates**, **document generation**, and **automated consignment handling** are either missing or extremely limited.
+- Business logic such as order ownership enforcement, allowed status transitions, or secure driver-customer communication is not deeply integrated into these platforms.
+
+### This System – Advantages
+
 
 Despite these limits, the codebase is ready for extension, and the architecture supports rapid future development with minimal refactoring.
 
