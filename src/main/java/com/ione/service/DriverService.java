@@ -16,4 +16,6 @@ public interface DriverService {
     List<DriverResponseDTO> getAllDrivers();
     void deleteDriver(Integer id);
     void updateBalance(Integer driverId, BigDecimal amount);
+
+    boolean isNotOwner(String email, Integer id);
 }

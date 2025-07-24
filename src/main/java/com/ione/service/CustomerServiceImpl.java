@@ -69,4 +69,9 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteCustomer(Integer id) {
         customerRepository.deleteById(id);
     }
+    public boolean isNotOwner(String email, Integer id) {
+        return customerRepository.findById(id)
+                .map(c -> !c.getEmail().equalsIgnoreCase(email))
+                .orElse(true); // not found = not owner
+    }
 }

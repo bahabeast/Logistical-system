@@ -19,6 +19,11 @@ public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
+    public boolean isOwner(String email, Integer id) {
+        return driverRepository.findById(id)
+                .map(driver -> driver.getEmail().equalsIgnoreCase(email))
+                .orElse(false);
+    }
 
     @Override
     @Transactional
@@ -60,5 +65,10 @@ public class DriverServiceImpl implements DriverService {
     @Transactional
     public void deleteDriver(Integer id) {
         driverRepository.deleteById(id);
+    }
+    public boolean isNotOwner(String email, Integer id) {
+        return driverRepository.findById(id)
+                .map(d -> !d.getEmail().equalsIgnoreCase(email))
+                .orElse(true); // treat not found as "not owner"
     }
 }

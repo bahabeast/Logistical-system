@@ -14,5 +14,6 @@ public interface CustomerService {
     List<CustomerResponseDTO> getAllCustomers();
     void deleteCustomer(Integer id);
     void updateBalance(Integer customerId, BigDecimal amount);
+    boolean isNotOwner(String email, Integer id);
 }
 

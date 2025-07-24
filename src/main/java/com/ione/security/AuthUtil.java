@@ -1,6 +1,9 @@
 package com.ione.security;
+import com.ione.entity.Customer;
 import com.ione.entity.enums.Role;
+import com.ione.repository.CustomerRepository;
 import com.ione.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 public class AuthUtil {
     public static String getCurrentUsername() {

@@ -89,4 +89,10 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public List<Consignment> getAll() {
         return consignmentRepository.findAll();
     }
+    public boolean isOwner(String email, Integer id) {
+        return customerRepository.findById(id)
+                .map(customer -> customer.getEmail().equalsIgnoreCase(email))
+                .orElse(false);
+    }
+
 }
