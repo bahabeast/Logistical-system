@@ -99,10 +99,11 @@ Popular platforms like fafa.kz, della.kz, and ati.su are widely used in Kazakhst
 
 While the system provides strong backend infrastructure, it currently operates as a prototype. Some limitations include:
 
-- These platforms often serve as **listing services** where cargo or vehicle availability is posted, but **do not support full back-office automation**.
-- There is **no granular role-based access**, which leads to poor separation between user types.
-- Features like **real-time delivery status updates**, **document generation**, and **automated consignment handling** are either missing or extremely limited.
-- Business logic such as order ownership enforcement, allowed status transitions, or secure driver-customer communication is not deeply integrated into these platforms.
+- Does not have frontend part created
+- Consignments still created manually by writing some details
+- Balance of users are fictional and not applicable in real world scenarios
+- There could arise problems from both sides(customer, driver) leading to cancellation of order 
+- Some bugs to be handled
 
 ### This System – Advantages
 
