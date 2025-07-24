@@ -14,10 +14,28 @@ Compared to existing regional platforms like **fafa.kz**, **della.kz**, and **at
 
 ### fafa.kz, della.kz, ati.su – Limitations
 
-- These platforms often serve as **listing services** where cargo or vehicle availability is posted, but **do not support full back-office automation**.
-- There is **no granular role-based access**, which leads to poor separation between user types.
-- Features like **real-time delivery status updates**, **document generation**, and **automated consignment handling** are either missing or extremely limited.
-- Business logic such as order ownership enforcement, allowed status transitions, or secure driver-customer communication is not deeply integrated into these platforms.
+No User Interface (UI)
+The application currently lacks a web or mobile frontend. It is designed to expose REST APIs and requires integration with a client application to be used interactively.
+
+No Real-Time Notifications
+Features such as email, SMS, or in-app notifications for order updates and delivery status changes are not yet implemented.
+
+No Document Export (PDF/Excel)
+Although consignment generation is supported at the data level, export functionality (e.g., to PDF or Excel) has not yet been added.
+
+No Admin or Dispatcher Role
+Only customer and driver roles are implemented. Dispatcher or administrator functionalities (e.g., overseeing all orders, assigning drivers) are planned for future versions.
+
+No Payment or Billing Integration
+The system does not yet support financial operations such as invoicing, payment tracking, or cost estimation.
+
+Limited Error Reporting and Logging
+While basic exception handling exists, detailed operational logging, auditing, and centralized error tracking have not been integrated.
+
+Deployment and Scalability Features Not Included
+There is no out-of-the-box support for containerization (e.g., Docker), CI/CD pipelines, or horizontal scaling infrastructure.
+
+
 
 ### This System – Advantages
 
@@ -65,7 +83,7 @@ Compared to existing regional platforms like **fafa.kz**, **della.kz**, and **at
 | Testing                 | JUnit 5, Mockito                           |
 | Build Tool              | Maven                                      |
 | Authentication Utility  | Custom `AuthUtil` with role resolution     |
-| Documentation (Optional)| Swagger/OpenAPI ready                      |
+
 
 ## System Modules
 
@@ -95,13 +113,5 @@ Despite these limits, the codebase is ready for extension, and the architecture 
 - Lowers communication overhead between drivers, logisticians, and clients
 - Supports modern security practices and modular scalability
 
-## Getting Started
-
-1. Clone the repository
-2. Configure `application.properties` for your PostgreSQL instance
-3. Use `mvn spring-boot:run` or run the main class via your IDE
-4. Access endpoints using Postman or integrate with a frontend
-
 ## Conclusion
-
 This application serves as a foundational backend for logistics digitalization. It can significantly improve operational transparency, accountability, and efficiency for transportation firms. With support for automated order tracking, role-specific logic, and document management, it aims to go beyond what regional platforms currently offer.
